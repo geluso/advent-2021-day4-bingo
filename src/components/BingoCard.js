@@ -41,8 +41,13 @@ class BingoCard extends React.Component {
         const winningRow = this.checkWinningRow()
         const winningCol = this.checkWinningCol()
 
+        let className = "bingo-card"
+        if (this.props.bingo.wonBoards.has(this.props.cardIndex)) {
+            className += " won-board"
+        }
+        
         let unmarkedSum = 0
-        return <div className="bingo-card">
+        return <div className={className}>
             <div className="card-row">
                 <div className="card-cell">B</div>
                 <div className="card-cell">I</div>

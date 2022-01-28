@@ -2,7 +2,6 @@ import BingoCard from '../models/BingoCard.js'
 import Bingo from '../models/Bingo.js'
 
 function process(string) {
-    console.log('inside processing')
     const lines = string.split('\n')
     const picks = lines[0].split(',')
     const cards = []
@@ -19,8 +18,6 @@ function process(string) {
 
         let rows = [row1, row2, row3, row4, row5]
         rows = rows.map(rowString => rowString.trim().split(/ +/))
-
-        console.log('rows:', rows)
 
         // skip over the five lines of this card
         // and the blank line before the next card

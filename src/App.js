@@ -11,8 +11,6 @@ import process from './data/ProcessData';
 class App extends React.Component {
   constructor(props) {
     super(props)
-    console.log('processing')
-
     let bingo = process(BigData)
     this.state = {
       bingo: bingo
@@ -32,10 +30,6 @@ class App extends React.Component {
   }
 
   drawNumber() {
-    if (this.state.bingo.isGameOver) {
-      return
-    }
-
     this.state.bingo.drawNumber()
     this.setState({bingo: this.state.bingo})
   }
@@ -47,9 +41,7 @@ class App extends React.Component {
 
   onBingo(cardIndex) {
     console.log('BINGO!', cardIndex)
-
-    this.state.bingo.isGameOver = true
-    this.setState({bingo: this.state.bingo})
+    this.state.bingo.wonBoards.add(cardIndex)
   }
 
   render() {
@@ -77,7 +69,6 @@ class App extends React.Component {
       </div>
 
       {this.state.bingo.cards.map((card, index) => {
-        console.log(card)
         return <BingoCard key={index} cardIndex={index} card={card} bingo={this.state.bingo} onBingo={this.onBingo}></BingoCard>
       })}
     </div>

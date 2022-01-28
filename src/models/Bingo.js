@@ -15,8 +15,6 @@ class Bingo {
         this.drawn.add(number)
         this.drawnOrder.push(number)
         this.drawIndex++
-
-        console.log(this.drawIndex, this.drawnOrder, this.drawn)
     }
 
     reset() {
@@ -24,6 +22,7 @@ class Bingo {
         this.drawnOrder = []
         this.drawIndex = 0
         this.isGameOver = false
+        this.wonBoards = new Set()
     }
 }
 

@@ -26,3 +26,7 @@
 .winner {
   background-color: seagreen;
 }
+
+.won-board {
+  background-color: #ccc;
+}
