@@ -1,25 +1,87 @@
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+import React from 'react';
+
+import BingoCard from './components/BingoCard';
+import DrawnNumbers from './components/DrawnNumbers';
+import SmallData from './data/SmallData';
+import BigData from './data/BigData';
+import process from './data/ProcessData';
+
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    console.log('processing')
+
+    let bingo = process(BigData)
+    this.state = {
+      bingo: bingo
+    }
+
+    this.onBingo = this.onBingo.bind(this)
+  }
+
+  useSmallData() {
+    let bingo = process(SmallData)
+    this.setState({bingo: bingo})
+  }
+
+  useBigData() {
+    let bingo = process(BigData)
+    this.setState({bingo: bingo})
+  }
+
+  drawNumber() {
+    if (this.state.bingo.isGameOver) {
+      return
+    }
+
+    this.state.bingo.drawNumber()
+    this.setState({bingo: this.state.bingo})
+  }
+
+  reset() {
+    this.state.bingo.reset()
+    this.setState({bingo: this.state.bingo})
+  }
+
+  onBingo(cardIndex) {
+    console.log('BINGO!', cardIndex)
+
+    this.state.bingo.isGameOver = true
+    this.setState({bingo: this.state.bingo})
+  }
+
+  render() {
+    return <div>
+      <div>
+        <DrawnNumbers bingo={this.state.bingo} />
+      </div>
+
+      <div>
+        <button onClick={() => this.drawNumber()}>
+          Draw Number
+        </button>
+
+        <button onClick={() => this.useSmallData()}>
+          Small Data
+        </button>
+
+        <button onClick={() => this.useBigData()}>
+          Big Data
+        </button>
+
+        <button onClick={() => this.reset()}>
+          Reset
+        </button>
+      </div>
+
+      {this.state.bingo.cards.map((card, index) => {
+        console.log(card)
+        return <BingoCard key={index} cardIndex={index} card={card} bingo={this.state.bingo} onBingo={this.onBingo}></BingoCard>
+      })}
     </div>
-  );
+  }
 }
 
 export default App;
