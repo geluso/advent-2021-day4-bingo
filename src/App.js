@@ -1,6 +1,6 @@
 import './App.css';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import BingoCard from './components/BingoCard';
 import DrawnNumbers from './components/DrawnNumbers';
@@ -8,71 +8,71 @@ import SmallData from './data/SmallData';
 import BigData from './data/BigData';
 import process from './data/ProcessData';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props)
-    let bingo = process(BigData)
-    this.state = {
-      bingo: bingo
-    }
+export default function App(props) {
+  const [bingo, setBingo] = useState(null)
+  const [drawn, setDrawn] = useState([])
 
-    this.onBingo = this.onBingo.bind(this)
+  useEffect(() => {
+    const bingo = process(BigData)
+    setBingo(bingo);
+    setDrawn(bingo.drawn)
+  }, [])
+
+  function useSmallData() {
+    const bingo = process(SmallData)
+    setBingo(bingo)
+    setDrawn(bingo.drawn)
   }
 
-  useSmallData() {
-    let bingo = process(SmallData)
-    this.setState({bingo: bingo})
+  function useBigData() {
+    const bingo = process(BigData)
+    setBingo(bingo)
+    setDrawn(bingo.drawn)
   }
 
-  useBigData() {
-    let bingo = process(BigData)
-    this.setState({bingo: bingo})
+  function drawNumber() {
+    console.log("drawNumber")
+    bingo.drawNumber()
+    setDrawn(new Set(bingo.drawn))
   }
 
-  drawNumber() {
-    this.state.bingo.drawNumber()
-    this.setState({bingo: this.state.bingo})
+  function reset() {
+    console.log("reset")
+    bingo.reset()
+    setDrawn(new Set(bingo.drawn))
   }
 
-  reset() {
-    this.state.bingo.reset()
-    this.setState({bingo: this.state.bingo})
-  }
-
-  onBingo(cardIndex) {
+  function onBingo(cardIndex) {
     console.log('BINGO!', cardIndex)
-    this.state.bingo.wonBoards.add(cardIndex)
+    props.bingo.wonBoards.add(cardIndex)
+    //setBingo(bingo)
   }
 
-  render() {
-    return <div>
-      <div>
-        <DrawnNumbers bingo={this.state.bingo} />
-      </div>
+  return <div>
+    <div>
+      <button onClick={drawNumber}>
+        Draw Number
+      </button>
 
-      <div>
-        <button onClick={() => this.drawNumber()}>
-          Draw Number
-        </button>
+      <button onClick={useSmallData}>
+        Small Data
+      </button>
 
-        <button onClick={() => this.useSmallData()}>
-          Small Data
-        </button>
+      <button onClick={useBigData}>
+        Big Data
+      </button>
 
-        <button onClick={() => this.useBigData()}>
-          Big Data
-        </button>
-
-        <button onClick={() => this.reset()}>
-          Reset
-        </button>
-      </div>
-
-      {this.state.bingo.cards.map((card, index) => {
-        return <BingoCard key={index} cardIndex={index} card={card} bingo={this.state.bingo} onBingo={this.onBingo}></BingoCard>
-      })}
+      <button onClick={reset}>
+        Reset
+      </button>
     </div>
-  }
-}
 
-export default App;
+    <div>
+      <DrawnNumbers drawn={drawn} />
+    </div>
+
+    {bingo === null ? "Loading..." : bingo.cards.map((card, index) => {
+      return <BingoCard key={index} cardIndex={index} card={card} drawn={drawn} onBingo={onBingo}></BingoCard>
+    })}
+  </div>
+}
